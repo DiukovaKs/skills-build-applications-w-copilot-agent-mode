@@ -13,6 +13,8 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import os
+
 from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
@@ -30,14 +32,22 @@ router.register(r'leaderboard', LeaderboardViewSet, basename='leaderboard')
 router.register(r'workouts', WorkoutViewSet, basename='workout')
 
 
+def get_api_base_url(request):
+    codespace_name = os.environ.get('CODESPACE_NAME')
+    if codespace_name:
+        return f'https://{codespace_name}-8000.app.github.dev/api'
+    return request.build_absolute_uri('/api').rstrip('/')
+
+
 @api_view(['GET'])
 def api_root(request, format=None):
+    base_url = get_api_base_url(request)
     return Response({
-        'users': reverse('user-list', request=request, format=format),
-        'teams': reverse('team-list', request=request, format=format),
-        'activities': reverse('activity-list', request=request, format=format),
-        'leaderboard': reverse('leaderboard-list', request=request, format=format),
-        'workouts': reverse('workout-list', request=request, format=format),
+        'users': f'{base_url}/users/',
+        'teams': f'{base_url}/teams/',
+        'activities': f'{base_url}/activities/',
+        'leaderboard': f'{base_url}/leaderboard/',
+        'workouts': f'{base_url}/workouts/',
     })
 
 
