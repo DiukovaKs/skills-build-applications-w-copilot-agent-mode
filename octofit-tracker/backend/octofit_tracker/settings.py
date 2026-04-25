@@ -28,7 +28,7 @@ DEBUG = True
 
 
 # Allow localhost and Codespace host
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'testserver']
 CODESPACE_NAME = os.environ.get('CODESPACE_NAME')
 if CODESPACE_NAME:
     ALLOWED_HOSTS.append(f'{CODESPACE_NAME}-8000.app.github.dev')
